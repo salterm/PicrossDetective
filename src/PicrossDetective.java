@@ -90,6 +90,14 @@ public class PicrossDetective {
         width = input;
         
         //Get row clues
+        boolean validClue = false;
+        for (int i = 0; i < height; i++) {
+            while (!validClue) {
+             Vector<Integer> = new Vector<Integer>();
+                System.out.println("Enter clues from left to right for row " + (i + 1) + " (one at a time, advance rows by entering -1):");
+                in.nextInt();
+            }
+        }
         
         //Get column clues
         
