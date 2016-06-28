@@ -1,8 +1,8 @@
 /* 
 * Copyright (c) 2016 Michael Salter
 * Email: salterm@pdx.edu
-* Licensed under the MIT license <LICENSE-MIT or http://opensource.org/licenses/MIT>
-* This file may not be copied, modified, or distributed except according to those terms.
+* This program is available under the "MIT license". Please see the LICENSE file for the full text.
+* This file may not be copied, modified, or distributed except according to the terms of said license.
 */
  
 import java.util.Scanner;
