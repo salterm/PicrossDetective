@@ -1,6 +1,8 @@
-/**
- * Created by Michael Salter on 6/24/2016.
- */
+/* 
+* Copyright (c) 2016 Michael Salter <salterm@pdx.edu>
+* Licensed under the MIT license <LICENSE-MIT or http://opensource.org/licenses/MIT>
+* This file may not be copied, modified, or distributed except according to those terms.
+*/
  
 import java.util.Scanner;
  
