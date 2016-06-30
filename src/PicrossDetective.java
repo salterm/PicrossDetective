@@ -12,72 +12,21 @@ public class PicrossDetective {
     public static int height;
     public static int width;
     
-    private static final int maxHeight = 10;
-    private static final int maxWidth = 10;
-    
-    private class Clues {
-        private Vector<Integer>[] rows;
-        private Vector<Integer>[] columns;
-    }
-    
-    private enum Colors {VOID, WHITE, BLACK};
-    
-    private class Puzzle {
-        public Puzzle() {
-            for (Colors[] ca : puzzle) {
-                for (Colors c : ca) {
-                    Arrays.fill(c, Colors.VOID);
-                }
-            }
-        }
-        private Colors[][] puzzle; 
-        
-        private void fill(int row, int column, Colors c) {
-            if (row < 0 || row >= height || column < 0 || column >= width) {
-                throw new IllegalArgumentException("Invalid row/column dimension!");
-            } else {
-                puzzle[row][column] = c;
-            }
-        }
-        
-        private void print() {
-            StringBuilder sb = new StringBuilder();
-            for (Colors[] ca: puzzle) {
-                for (Colors c: ca) {
-                    switch (c) {
-                        case VOID:
-                            sb.append("?");
-                            break;
-                        case WHITE:
-                            sb.append("0");
-                            break;
-                        case BLACK:
-                            sb.append("#");
-                            break;
-                    }
-                }
-                sb.append("/n");
-            }
-            
-            System.out.println(sb);
-        }
-    }
-    
-    private static Clues clues;
-    private static Puzzle puzzle;
-    
     public static void main (String[] args) {
-        
-        Scanner in = new Scanner(System.in); 
-        
+        PicrossDetective picrossDetective = new PicrossDetective();
+        Puzzle puzzle;
+        Clues clues;
+
+        Scanner in = new Scanner(System.in);
+
         //Get height of puzzle
         int input = 0;
         while(input == 0) {
             System.out.println("Enter height: ");
         
             input = in.nextInt();
-            if (input <= 0 || input > maxHeight) {
-                System.out.println("Must be positive non-zero value less than " + maxHeight + ".");
+            if (input <= 0 || input > Puzzle.maxHeight) {
+                System.out.println("Must be positive non-zero value less than " + Puzzle. maxHeight + ".");
                 input = 0;
             }
         }
@@ -90,17 +39,23 @@ public class PicrossDetective {
             System.out.println("Enter width: ");
         
             input = in.nextInt();
-            if (input <= 0 || input > maxWidth) {
-                System.out.println("Must be positive non-zero value less than " + maxWidth + ".");
+            if (input <= 0 || input > Puzzle.maxWidth) {
+                System.out.println("Must be positive non-zero value less than " + Puzzle.maxWidth + ".");
                 input = 0;
             }
         }
         
         width = input;
+
+        puzzle = new Puzzle(width, height);
+        clues = new Clues(width, height);
+
+        //DEBUG
+        puzzle.print();
         
         System.out.println("Enter clues from left to right, separated by spaces. If a row/column is empty, simply hit return.");
         //Get row clues
-        for (int i = 0; i < height; i++) {
+        for (int i = 0; i < puzzle.height; i++) {
             Vector<Integer> rowClues = new Vector<Integer>();
             System.out.println("Row " + (i + 1) + ": ");
             BufferedReader clueInput = new BufferedReader(new InputStreamReader(System.in));
@@ -115,7 +70,7 @@ public class PicrossDetective {
                 if (clue <= 0) {
                     throw new IllegalArgumentException("Clues must be positive non-zero values.");
                 }
-                if (clue > width) {
+                if (clue > puzzle.width) {
                     throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
                 }
                 rowClues.add(clue);
@@ -127,17 +82,17 @@ public class PicrossDetective {
                 impliedRowWidth += c;
             }
             impliedRowWidth += rowClues.size() - 1;
-            if (impliedRowWidth > width) {
+            if (impliedRowWidth > puzzle.width) {
                 throw new IllegalArgumentException("Minimum width implied by clues cannot exceed puzzle dimensions.");
             }
             //DEBUG
             System.out.println(rowClues);
 
-            clues.rows[i] = rowClues;
+            clues.rows.add(i, rowClues);
         }
         
         //Get column clues
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < puzzle.width; i++) {
             Vector<Integer> columnClues = new Vector<Integer>();
             System.out.println("Column " + (i + 1) + ": ");
             BufferedReader clueInput = new BufferedReader(new InputStreamReader(System.in));
@@ -152,7 +107,7 @@ public class PicrossDetective {
                 if (clue <= 0) {
                     throw new IllegalArgumentException("Clues must be positive non-zero values.");
                 }
-                if (clue > height) {
+                if (clue > puzzle.height) {
                     throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
                 }
                 columnClues.add(clue);
@@ -164,13 +119,13 @@ public class PicrossDetective {
                 impliedColumnHeight += c;
             }
             impliedColumnHeight += columnClues.size() - 1;
-            if (impliedColumnHeight > height) {
+            if (impliedColumnHeight > puzzle.height) {
                 throw new IllegalArgumentException("Minimum height implied by clues cannot exceed puzzle dimensions.");
             }
             //DEBUG
             System.out.println(columnClues);
 
-            clues.columns[i] = columnClues;
+            clues.columns.add(i, columnClues);
         }       
         //Begin solving
         boolean solved = false;
