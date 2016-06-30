@@ -23,10 +23,21 @@ public class PicrossDetective {
     private enum Colors {VOID, WHITE, BLACK};
     
     private class Puzzle {
+        public Puzzle() {
+            for (Colors[] ca : puzzle) {
+                for (Colors c : ca) {
+                    Arrays.fill(c, Colors.VOID);
+                }
+            }
+        }
         private Colors[][] puzzle; 
         
-        private void fill(int row, int column) {
-            
+        private void fill(int row, int column, Colors c) {
+            if (row < 0 || row >= height || column < 0 || column >= width) {
+                throw new IllegalArgumentException("Invalid row/column dimension!");
+            } else {
+                puzzle[row][column] = c;
+            }
         }
         
         private void print() {
@@ -66,7 +77,7 @@ public class PicrossDetective {
         
             input = in.nextInt();
             if (input <= 0 || input > maxHeight) {
-                System.out.println("Invalid number.");
+                System.out.println("Must be positive non-zero value less than " + maxHeight + ".");
                 input = 0;
             }
         }
@@ -80,7 +91,7 @@ public class PicrossDetective {
         
             input = in.nextInt();
             if (input <= 0 || input > maxWidth) {
-                System.out.println("Invalid number.");
+                System.out.println("Must be positive non-zero value less than " + maxWidth + ".");
                 input = 0;
             }
         }
@@ -164,6 +175,7 @@ public class PicrossDetective {
         //Begin solving
         boolean solved = false;
         while (!cluesSatisfied()) {
+            //Print puzzle
             //solve
             
         }
