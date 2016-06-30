@@ -44,7 +44,7 @@ public class PicrossDetective {
                             break;
                     }
                 }
-                sb.append('/n');
+                sb.append("/n");
             }
             
             System.out.println(sb);
