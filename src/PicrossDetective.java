@@ -121,10 +121,46 @@ public class PicrossDetective {
             }
             //DEBUG
             System.out.println(rowClues);
+
+            clues.rows[i] = rowClues;
         }
         
         //Get column clues
-        
+        for (int i = 0; i < width; i++) {
+            Vector<Integer> columnClues = new Vector<Integer>();
+            System.out.println("Column " + (i + 1) + ": ");
+            BufferedReader clueInput = new BufferedReader(new InputStreamReader(System.in));
+            String[] userColumnClues = null;
+            try {
+                userColumnClues = clueInput.readLine().trim().split("\\s+");
+            } catch (Exception e) {
+                return;
+            }
+            for (String s : userColumnClues) {
+                int clue = Integer.parseInt(s);
+                if (clue <= 0) {
+                    throw new IllegalArgumentException("Clues must be positive non-zero values.");
+                }
+                if (clue > height) {
+                    throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
+                }
+                columnClues.add(clue);
+            }
+ 
+            //Check that total clues and minimum spaces between does not exceed puzzle dimensions
+            int impliedColumnHeight = 0;
+            for (Integer c : columnClues) {
+                impliedColumnHeight += c;
+            }
+            impliedColumnHeight += columnClues.size() - 1;
+            if (impliedColumnHeight > height) {
+                throw new IllegalArgumentException("Minimum height implied by clues cannot exceed puzzle dimensions.");
+            }
+            //DEBUG
+            System.out.println(columnClues);
+
+            clues.columns[i] = columnClues;
+        }       
         //Begin solving
         boolean solved = false;
         while (!cluesSatisfied()) {
