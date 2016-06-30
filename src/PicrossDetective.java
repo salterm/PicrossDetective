@@ -30,21 +30,18 @@ public class PicrossDetective {
         
         private void print() {
             StringBuilder sb = new StringBuilder();
-            for (Colors[] ca; puzzle) {
-                for (Colors c; ca) {
+            for (Colors[] ca: puzzle) {
+                for (Colors c: ca) {
                     switch (c) {
-                        case VOID {
-                            sb.append('?');
+                        case VOID:
+                            sb.append("?");
                             break;
-                        }
-                        case WHITE {
-                            sb.append('0');
+                        case WHITE:
+                            sb.append("0");
                             break;
-                        }
-                        case BLACK {
-                            sb.append('#');
+                        case BLACK:
+                            sb.append("#");
                             break;
-                        }
                     }
                 }
                 sb.append('/n');
@@ -112,7 +109,7 @@ public class PicrossDetective {
             for (Integer i : rowClues) {
                 impliedRowWidth += i;
             }
-            impliedRowWidth += rowClues.size - 1
+            impliedRowWidth += rowClues.size - 1;
             if (impliedRowWidth > width) {
                 throw new IllegalArgumentException("Minimum width implied by clues cannot exceed puzzle dimensions.");
             }
