@@ -89,14 +89,35 @@ public class PicrossDetective {
         
         width = input;
         
+        System.out.println("Enter clues from left to right, separated by spaces. If a row/column is empty, simply hit return.");
         //Get row clues
         boolean validClue = false;
         for (int i = 0; i < height; i++) {
-            while (!validClue) {
-             Vector<Integer> = new Vector<Integer>();
-                System.out.println("Enter clues from left to right for row " + (i + 1) + " (one at a time, advance rows by entering -1):");
-                in.nextInt();
+            Vector<Integer> rowClues = new Vector<Integer>();
+            System.out.println("Row " + (i + 1) + ": ");
+            String[] userRowClues = in.next().trim().split("\\s+");
+            for (String s : userRowClues) {
+                int clue = Integer.parseInt(s);
+                if (clue <= 0) {
+                    throw new IllegalArgumentException("Clues must be positive non-zero values.");
+                }
+                if (clue >= width) {
+                    throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
+                }
+                rowClues.add(clue);
             }
+ 
+            //Check that total clues and minimum spaces between does not exceed puzzle dimensions
+            int impliedRowWidth = 0;
+            for (Integer i : rowClues) {
+                impliedRowWidth += i;
+            }
+            impliedRowWidth += rowClues.size - 1
+            if (impliedRowWidth > width) {
+                throw new IllegalArgumentException("Minimum width implied by clues cannot exceed puzzle dimensions.");
+            }
+            //DEBUG
+            System.out.println(rowClues);
         }
         
         //Get column clues
