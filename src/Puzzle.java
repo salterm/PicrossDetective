@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Puzzle {
-    public enum Colors{VOID, WHITE, BLACK};
+    public enum Colors {VOID, WHITE, BLACK}
 
     public final int height;
     public final int width;
@@ -11,7 +11,7 @@ public class Puzzle {
 
     private Colors[][] puzzle;
 
-    public Puzzle(int width, int height) {
+    public Puzzle(int height, int width) {
         if (height > maxHeight || height <= 0) {
             throw new IllegalArgumentException("Invalid value for puzzle height.");
         } else {
@@ -23,7 +23,7 @@ public class Puzzle {
             this.width = width;
         }
 
-        puzzle = new Colors[width][height];
+        puzzle = new Colors[height][width];
 
         for (Colors[] ca : puzzle) {
             Arrays.fill(ca, Colors.VOID);
@@ -38,19 +38,24 @@ public class Puzzle {
         }
     }
 
+    public Colors getSquare(int row, int column) {
+        return puzzle[row][column];
+    }
+
     public void print() {
         StringBuilder sb = new StringBuilder();
-        for (Colors[] ca: puzzle) {
-            for (Colors c: ca) {
+        for (Colors[] ca : puzzle) {
+            for (Colors c : ca) {
                 switch (c) {
-                   case VOID:                                                                                          sb.append("?");
-                       break;
-                   case WHITE:
-                       sb.append("0");
-                       break;
-                   case BLACK:
-                       sb.append("#");
-                       break;
+                    case VOID:
+                        sb.append("?");
+                        break;
+                    case WHITE:
+                        sb.append("0");
+                        break;
+                    case BLACK:
+                        sb.append("#");
+                        break;
                 }
             }
             sb.append("\n");
