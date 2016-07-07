@@ -38,6 +38,32 @@ public class Puzzle {
         }
     }
 
+    public void fillRow(int row, ArrayList<Colors> ca) {
+        if (row < 0 || row >= height || ca.size() < 1 || ca.size() >= width) {
+            throw new IllegalArgumentException("Invalid row/column dimension!");
+        } else {
+            for (int column = 0; column <= width; column++) {
+                puzzle[row][column] = ca.get(column);
+            }
+        }
+    }
+
+    public void clearRow(int row) {
+        if (row < 0 || row >= height) {
+            throw new IllegalArgumentException("Invalid row dimension!");
+        } else {
+            for (int column = 0; column <= width; column++) {
+                puzzle[row][column] = Colors.VOID;
+            }
+        }
+    }
+
+    public void clearPuzzle() {
+        for (int row = 0; row <= height; row++) {
+            clearRow(row);
+        }
+    }
+
     public Colors getSquare(int row, int column) {
         return puzzle[row][column];
     }

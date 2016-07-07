@@ -140,7 +140,10 @@ public class PicrossDetective {
         }
 
         //Iterate through all possible solutions
-        depthFirstSearch(puzzle);
+        depthFirstSearch(puzzle, clues, allPossibleRowsEveryRow);
+
+        //Display puzzle; either a solution, or a blank puzzle if no solution found
+        puzzle.print();
     }
 
     private static  Vector<ArrayList<Puzzle.Colors>> findAllPossibleRows(final Puzzle puzzle, final Clues clues, final int row) {
@@ -170,7 +173,21 @@ public class PicrossDetective {
         }
     }
 
-    private static void depthFirstSearch(Puzzle puzzle) {
+    private static void depthFirstSearch(Puzzle puzzle, Clues clues, ArrayList<Vector<ArrayList<Puzzle.Colors>>> allPossibleRowsEveryRow) {
+        int row = 0;
+        //Go as deeply as possible
+        for (int i = 0; i <= puzzle.height - 1;) {
 
+        }
+        for (int i = 0; i < allPossibleRowsEveryRow.get(row).size(); i++) {
+            puzzle.fillRow(row, allPossibleRowsEveryRow.get(row).get(i));
+            if (clues.isPuzzleSatisfied(puzzle)) {
+                return;
+            }
+        }
+
+        //Puzzle not satisfiable
+        puzzle.clearPuzzle();
+        return;
     }
 }
