@@ -191,3 +191,22 @@ public class PicrossDetective {
         return;
     }
 }
+
+
+/*solve(puzzle, row) {
+    if (row > height) {
+        return false
+    }
+    if puzzle is solved {
+        return true
+    }
+    for each possible row p
+    {
+        fillRow (row, p);
+        x = solve(puzzle, row + 1);
+        clearRow (row);
+        if (x) {
+            return true;
+        }
+    }
+}*/
