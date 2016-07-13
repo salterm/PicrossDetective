@@ -140,16 +140,21 @@ public class PicrossDetective {
         }
 
         //Iterate through all possible solutions
-        depthFirstSearch(puzzle, clues, allPossibleRowsEveryRow);
+        boolean isPuzzleSatisfiable = solve(puzzle, clues, allPossibleRowsEveryRow, 0);
 
         //Display puzzle; either a solution, or a blank puzzle if no solution found
-        puzzle.print();
+        if (isPuzzleSatisfiable) {
+            puzzle.print();
+        } else {
+            puzzle.clearPuzzle();
+            puzzle.print();
+        }
     }
 
-    private static  Vector<ArrayList<Puzzle.Colors>> findAllPossibleRows(final Puzzle puzzle, final Clues clues, final int row) {
+    private static Vector<ArrayList<Puzzle.Colors>> findAllPossibleRows(final Puzzle puzzle, final Clues clues, final int row) {
         Vector<ArrayList<Puzzle.Colors>> allPossibleRows = new Vector<>();
         recursivelyBuildRows(puzzle.width, clues, row, allPossibleRows, new ArrayList<>());
-        assert(allPossibleRows.size() > 0);
+        assert (allPossibleRows.size() > 0);
         return allPossibleRows;
     }
 
@@ -162,7 +167,7 @@ public class PicrossDetective {
         } else {
             //Recursive case
             ArrayList<Puzzle.Colors> oldRow = new ArrayList<>(partialRow);
-            for (Puzzle.Colors c : Puzzle.Colors.values() ) {
+            for (Puzzle.Colors c : Puzzle.Colors.values()) {
                 if (c == Puzzle.Colors.VOID) {
                     continue;
                 }
@@ -176,7 +181,7 @@ public class PicrossDetective {
     private static void depthFirstSearch(Puzzle puzzle, Clues clues, ArrayList<Vector<ArrayList<Puzzle.Colors>>> allPossibleRowsEveryRow) {
         int row = 0;
         //Go as deeply as possible
-        for (int i = 0; i <= puzzle.height - 1;) {
+        for (int i = 0; i < puzzle.height - 1; ) {
 
         }
         for (int i = 0; i < allPossibleRowsEveryRow.get(row).size(); i++) {
@@ -190,7 +195,27 @@ public class PicrossDetective {
         puzzle.clearPuzzle();
         return;
     }
+
+    private static boolean solve(Puzzle puzzle, Clues clues, ArrayList<Vector<ArrayList<Puzzle.Colors>>> allPossibleRowsEveryRow, int row) {
+        if (row >= puzzle.height) {
+            return false;
+        }
+        for (ArrayList<Puzzle.Colors> r : allPossibleRowsEveryRow.get(row)) {
+            puzzle.fillRow(row, r);
+            boolean x = solve(puzzle, clues, allPossibleRowsEveryRow, row + 1);
+            if (!x) {
+                if (clues.isPuzzleSatisfied(puzzle)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
+
 
 
 /*solve(puzzle, row) {
