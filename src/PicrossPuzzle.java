@@ -7,22 +7,26 @@
 
 import java.util.*;
 
-public class Clues {
-    public ArrayList<Vector<Integer>> rows;
-    public ArrayList<Vector<Integer>> columns;
+class PicrossPuzzle {
+    ArrayList<Vector<Integer>> rows;
+    ArrayList<Vector<Integer>> columns;
+    final int height;
+    final int width;
 
-    public Clues(int height, int width) {
+    PicrossPuzzle(final int height, final int width) {
+        this.height = height;
+        this.width = width;
         rows = new ArrayList<>(height);
         columns = new ArrayList<>(width);
     }
 
-    public boolean isRowSatisfied(final Puzzle puzzle, final int row) {
+    private boolean isRowSatisfied(final PicrossCanvas puzzle, final int row) {
         //List of blocks existing in the puzzle
         Vector<Integer> puzzleRow = new Vector<>();
 
         int currentBlockLength = 0;
         //Iterate through the row
-        for (int column = 0; column < puzzle.width; column++) {
+        for (int column = 0; column < width; column++) {
             switch (puzzle.getSquare(row, column)) {
                 case VOID:
                     return false;
@@ -46,14 +50,14 @@ public class Clues {
         return rows.get(row).equals(puzzleRow);
     }
 
-    public boolean isRowSatisfied(final ArrayList<Puzzle.Colors> submittedRow, final int row) {
+    boolean isRowSatisfied(final ArrayList<PicrossCanvas.Colors> submittedRow, final int row) {
         //List of blocks existing in the puzzle
         Vector<Integer> puzzleRow = new Vector<>();
 
         int currentBlockLength = 0;
         //Iterate through the row
-        for (int column = 0; column < submittedRow.size(); column++) {
-            switch (submittedRow.get(column)) {
+        for (PicrossCanvas.Colors aSubmittedRow : submittedRow) {
+            switch (aSubmittedRow) {
                 case VOID:
                     return false;
                 case WHITE:
@@ -76,13 +80,13 @@ public class Clues {
         return rows.get(row).equals(puzzleRow);
     }
 
-    public boolean isColumnSatisfied(final Puzzle puzzle, final int column) {
+    private boolean isColumnSatisfied(final PicrossCanvas puzzle, final int column) {
         //List of blocks existing in the puzzle
         Vector<Integer> puzzleColumn = new Vector<>();
 
         int currentBlockLength = 0;
         //Iterate through the row
-        for (int row = 0; row < puzzle.height; row++) {
+        for (int row = 0; row < height; row++) {
             switch (puzzle.getSquare(row, column)) {
                 case VOID:
                     return false;
@@ -106,15 +110,15 @@ public class Clues {
         return columns.get(column).equals(puzzleColumn);
     }
 
-    public boolean isPuzzleSatisfied(final Puzzle puzzle) {
+    boolean isPuzzleSatisfied(final PicrossCanvas puzzle) {
         //If the clues are satisfied in every row...
-        for (int row = 0; row < puzzle.width; row++) {
+        for (int row = 0; row < height; row++) {
             if (!isRowSatisfied(puzzle, row)) {
                 return false;
             }
         }
         //...and in every column...
-        for (int column = 0; column < puzzle.height; column++) {
+        for (int column = 0; column < width; column++) {
             if (!isColumnSatisfied(puzzle, column)) {
                 return false;
             }

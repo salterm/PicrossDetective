@@ -7,24 +7,21 @@
 
 import java.util.*;
 
-public class Puzzle {
-    public enum Colors {VOID, WHITE, BLACK}
+class PicrossCanvas {
+    enum Colors {VOID, WHITE, BLACK}
 
-    public final int height;
-    public final int width;
-
-    public static final int maxHeight = 10;
-    public static final int maxWidth = 10;
+    private final int height;
+    private final int width;
 
     private Colors[][] puzzle;
 
-    public Puzzle(int height, int width) {
-        if (height > maxHeight || height <= 0) {
+    PicrossCanvas(final int height, final int width) {
+        if (height <= 0) {
             throw new IllegalArgumentException("Invalid value for puzzle height.");
         } else {
             this.height = height;
         }
-        if (width > maxWidth || width <= 0) {
+        if (width <= 0) {
             throw new IllegalArgumentException("Invalid value for puzzle width.");
         } else {
             this.width = width;
@@ -37,7 +34,7 @@ public class Puzzle {
         }
     }
 
-    public void fill(int row, int column, Colors c) {
+    void fillSquare(final int row, final int column, final Colors c) {
         if (row < 0 || row >= height || column < 0 || column >= width) {
             throw new IllegalArgumentException("Invalid row/column dimension!");
         } else {
@@ -45,7 +42,7 @@ public class Puzzle {
         }
     }
 
-    public void fillRow(int row, ArrayList<Colors> ca) {
+    void fillRow(final int row, final ArrayList<Colors> ca) {
         if (row < 0 || row >= height || ca.size() < 1 || ca.size() > width) {
             throw new IllegalArgumentException("Invalid row/column dimension!");
         } else {
@@ -55,7 +52,7 @@ public class Puzzle {
         }
     }
 
-    public void clearRow(int row) {
+    private void clearRow(final int row) {
         if (row < 0 || row >= height) {
             throw new IllegalArgumentException("Invalid row dimension!");
         } else {
@@ -65,17 +62,17 @@ public class Puzzle {
         }
     }
 
-    public void clearPuzzle() {
+    void clearCanvas() {
         for (int row = 0; row < height; row++) {
             clearRow(row);
         }
     }
 
-    public Colors getSquare(int row, int column) {
+    Colors getSquare(final int row, final int column) {
         return puzzle[row][column];
     }
 
-    public void print() {
+    void print() {
         StringBuilder sb = new StringBuilder();
         for (Colors[] ca : puzzle) {
             for (Colors c : ca) {
