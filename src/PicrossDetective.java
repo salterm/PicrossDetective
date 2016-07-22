@@ -9,7 +9,6 @@ import java.util.*;
 import java.io.*;
 
 public class PicrossDetective {
-
     public static void main(String[] args) {
         //DEBUG
         PicrossFileHandler fileHandler = new PicrossFileHandler("testPuzzle.pxd");
@@ -171,6 +170,7 @@ public class PicrossDetective {
         }
     }
 
+    //A very naive implementation that checks all possible combinations of colors (except VOID, of course) and squares
     private static Vector<ArrayList<PicrossCanvas.Colors>> findAllPossibleRows(final PicrossPuzzle puzzle, final int row) {
         Vector<ArrayList<PicrossCanvas.Colors>> allPossibleRows = new Vector<>();
         recursivelyBuildRows(puzzle.width, puzzle, row, allPossibleRows, new ArrayList<>());
@@ -188,6 +188,7 @@ public class PicrossDetective {
             //Recursive case
             ArrayList<PicrossCanvas.Colors> oldRow = new ArrayList<>(partialRow);
             for (PicrossCanvas.Colors c : PicrossCanvas.Colors.values()) {
+                //Never try a row with an unfilled square
                 if (c == PicrossCanvas.Colors.VOID) {
                     continue;
                 }
@@ -200,20 +201,27 @@ public class PicrossDetective {
 
     private static boolean solve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, final int row) {
         if (row >= puzzle.height) {
+            //No solution possible if we're outside the bounds of the puzzle
             return false;
         }
         for (ArrayList<PicrossCanvas.Colors> r : allPossibleRowsEveryRow.get(row)) {
+            //Try this possible row
             canvas.fillRow(row, r);
-            boolean x = solve(canvas, puzzle, allPossibleRowsEveryRow, row + 1);
-            if (!x) {
+            boolean wasASolutionFound = solve(canvas, puzzle, allPossibleRowsEveryRow, row + 1);
+
+            if (wasASolutionFound) {
+                //If a solution is found, return to the top of the stack
+                return true;
+            } else {
+                //We may be at the last row, so check if the puzzle is satisfied
                 if (puzzle.isPuzzleSatisfied(canvas)) {
                     return true;
                 }
-            } else {
-                return true;
+                //Otherwise, try other possible rows
             }
         }
 
+        //If all possible rows at this depth are exhausted, report that no solution was found
         return false;
     }
 }
