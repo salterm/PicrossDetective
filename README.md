@@ -12,6 +12,8 @@ A tool to create and solve Picross (Nonograms, Griddlers, Hanjie, etc.) puzzles.
 ## To Use
 Picross Detective is a command-line application that reads and writes standard input/output. After submitting clues for a given Picross puzzle, the application will attempt to solve it. If a solution is found, it will be printed to standard out; otherwise, a blank puzzle will be displayed.
 
+Currently it is not recommended to attempt solving complicated puzzles larger than 10 x 10. The process is very, painfully, slow.
+
 ## To Build
 Picross Detective can be compiled into a .jar using javac.
 
@@ -20,9 +22,9 @@ Picross Detective can be compiled into a .jar using javac.
 ## Current features
 * Command-line interface
 * Puzzle automatically saves to a file
-* Puzzle automatically read in from a file (if it exists)
+* Puzzle automatically reads in from a file (if it exists)
 * Input puzzles of arbitrary size
-* Solve puzzles of arbitrary size
+* Solve puzzles of arbitrary size (eventually)
 * Displays solution to solved puzzle
 
 ## Future plans
