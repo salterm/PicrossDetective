@@ -21,19 +21,18 @@ Picross Detective can be compiled into a .jar using javac.
 
 ## Current features
 * Command-line interface
-* Puzzle automatically saves to a file
-* Puzzle automatically reads in from a file (if it exists)
+* Puzzle can be saved to a file
+* Puzzle can be read in from a file
 * Input puzzles of arbitrary size
 * Solve puzzles of arbitrary size (eventually)
-* Displays solution to solved puzzle
+* Displays solutions to puzzle (if they exist)
 
 ## Future plans
 * Better documentation
 * A GUI application
-* Option to read puzzles from a file
-* Option to write puzzles to a file
-* Show all possible solutions
 * Allow user to create and save puzzles
 * Multiple puzzle colors
 * Show progress of solver
 * Option to create puzzle from an existing image
+* Human-like logical solving
+* Hybrid human-like solving combined with random solution generator (should be faster for some puzzles?)
