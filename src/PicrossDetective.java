@@ -37,7 +37,6 @@ public class PicrossDetective {
             }
         }
 
-        PicrossCanvas canvas = null;
         PicrossPuzzle puzzle = null;
 
         //Try to read a puzzle from a file
@@ -51,7 +50,6 @@ public class PicrossDetective {
                 PicrossFileHandler fileReader = new PicrossFileHandler(response);
                 try {
                     puzzle = fileReader.readCluesFromFile();
-                    canvas = new PicrossCanvas(puzzle.height, puzzle.width);
                     System.out.println("Puzzle successfully loaded from '" + response + "'.");
                     break;
                 } catch (FileNotFoundException e) {
@@ -108,11 +106,7 @@ public class PicrossDetective {
 
             int width = input;
 
-            canvas = new PicrossCanvas(height, width);
             puzzle = new PicrossPuzzle(height, width);
-
-            //DEBUG
-            canvas.print();
 
             System.out.println("Enter clues from left to right, separated by spaces. If a row/column is empty, simply hit return.");
             //Get row clues
@@ -177,9 +171,6 @@ public class PicrossDetective {
                     columnClues.add(clue);
                 }
 
-                //Clear the input buffer
-                userInput.nextLine();
-
                 //Check that total puzzle and minimum spaces between does not exceed puzzle dimensions
                 int impliedColumnHeight = 0;
                 for (Integer c : columnClues) {
@@ -194,6 +185,9 @@ public class PicrossDetective {
 
                 puzzle.columns.add(i, columnClues);
             }
+
+            //Clear the input buffer
+            userInput.nextLine();
         }
 
         //Check if the user wants to save the puzzle to a file
@@ -265,14 +259,24 @@ public class PicrossDetective {
 
         //Iterate through all possible solutions
         System.out.println("Searching all combinations of all possible rows.");
-        boolean isPuzzleSatisfiable = solve(canvas, puzzle, allPossibleRowsEveryRow, 0);
+        Vector<PicrossCanvas> solutions = new Vector<>();
+        solve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle, allPossibleRowsEveryRow, solutions, 0);
 
-        //Display canvas; either a solution, or blank if no solution found
-        if (isPuzzleSatisfiable) {
-            System.out.println("Solution found!");
+        //Report any solutions found
+        String solutionReport;
+        if (solutions.size() == 1) {
+            solutionReport = "Solution found!";
+
+        } else if (solutions.size() > 1) {
+            solutionReport = "Solutions found!";
+        }
+        else {
+            solutionReport = "No solution found.";
+        }
+        System.out.println(solutionReport);
+        for (PicrossCanvas canvas : solutions) {
+            System.out.println();
             canvas.print();
-        } else {
-            System.out.println("No solution found.");
         }
     }
 
@@ -306,29 +310,21 @@ public class PicrossDetective {
     }
 
     //Naive depth-first search-based solving algorithm, which iterates over all possible combinations of possible rows and returns the first solution, or exhausts all possibilities fruitlessly.
-    private static boolean solve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, final int row) {
-        if (row >= puzzle.height) {
-            //No solution possible if we're outside the bounds of the puzzle
-            return false;
-        }
+    private static void solve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, Vector<PicrossCanvas> solutions, final int row) {
+        //Try all possible rows
         for (ArrayList<PicrossCanvas.Colors> r : allPossibleRowsEveryRow.get(row)) {
             //Try this possible row
             canvas.fillRow(row, r);
-            boolean wasASolutionFound = solve(canvas, puzzle, allPossibleRowsEveryRow, row + 1);
 
-            if (wasASolutionFound) {
-                //If a solution is found, return to the top of the stack
-                return true;
+            //If this isn't the last row
+            if (row < puzzle.height - 1) {
+                solve(canvas, puzzle, allPossibleRowsEveryRow, solutions, row + 1);
             } else {
-                //We may be at the last row, so check if the puzzle is satisfied
+                //Check if a solution is present
                 if (puzzle.isPuzzleSatisfied(canvas)) {
-                    return true;
+                   solutions.add(new PicrossCanvas(canvas));
                 }
-                //Otherwise, try other possible rows
             }
         }
-
-        //If all possible rows at this depth are exhausted, report that no solution was found
-        return false;
     }
 }

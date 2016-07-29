@@ -28,21 +28,27 @@ class PicrossFileHandler {
 
         PicrossPuzzle puzzle = new PicrossPuzzle(height, width);
 
-        //Add row puzzle
+        //Add row clue
         for (int i = 0; i < height; i++) {
             String[] rowCluesString = file.nextLine().split("\\s+");
             Vector<Integer> rowClues = new Vector<>();
             for (String s : rowCluesString) {
-                rowClues.add(Integer.parseInt(s));
+                int readClue = Integer.parseInt(s);
+                if (readClue != 0) {
+                    rowClues.add(readClue);
+                }
             }
             puzzle.rows.add(i, rowClues);
         }
-        //Add column puzzle
+        //Add column clue
         for (int i = 0; i < width; i++) {
             String[] columnCluesString = file.nextLine().split("\\s+");
             Vector<Integer> columnClues = new Vector<>();
             for (String s : columnCluesString) {
-                columnClues.add(Integer.parseInt(s));
+                int readClue = Integer.parseInt(s);
+                if (readClue != 0) {
+                    columnClues.add(readClue);
+                }
             }
             puzzle.columns.add(i, columnClues);
         }
@@ -73,25 +79,33 @@ class PicrossFileHandler {
         //Add the height and width
         output.append(puzzle.height).append(" ").append(puzzle.width).append("\n");
 
-        //Add row puzzle
+        //Add row clues
         for (int i = 0; i < puzzle.height; i++) {
-            for (int j = 0; j < puzzle.rows.get(i).size(); j++) {
-                if (j != 0) {
-                    output.append(" ").append(puzzle.rows.get(i).elementAt(j));
-                } else {
-                    output.append(puzzle.rows.get(i).elementAt(j));
+            if (puzzle.rows.get(i).size() == 0) {
+                output.append("0");
+            } else {
+                for (int j = 0; j < puzzle.rows.get(i).size(); j++) {
+                    if (j != 0) {
+                        output.append(" ").append(puzzle.rows.get(i).elementAt(j));
+                    } else {
+                        output.append(puzzle.rows.get(i).elementAt(j));
+                    }
                 }
             }
             output.append("\n");
         }
 
-        //Add column puzzle
+        //Add column clues
         for (int i = 0; i < puzzle.width; i++) {
-            for (int j = 0; j < puzzle.columns.get(i).size(); j++) {
-                if (j != 0) {
-                    output.append(" ").append(puzzle.columns.get(i).elementAt(j));
-                } else {
-                    output.append(puzzle.columns.get(i).elementAt(j));
+            if (puzzle.columns.get(i).size() == 0) {
+                output.append("0");
+            } else {
+                for (int j = 0; j < puzzle.columns.get(i).size(); j++) {
+                    if (j != 0) {
+                        output.append(" ").append(puzzle.columns.get(i).elementAt(j));
+                    } else {
+                        output.append(puzzle.columns.get(i).elementAt(j));
+                    }
                 }
             }
             output.append("\n");

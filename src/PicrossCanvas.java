@@ -34,6 +34,15 @@ class PicrossCanvas {
         }
     }
 
+    PicrossCanvas(PicrossCanvas other) {
+        this.height = other.height;
+        this.width = other.width;
+        puzzle = new Colors[height][width];
+        for (int row = 0; row < this.height; row++) {
+            System.arraycopy(other.puzzle[row], 0, this.puzzle[row], 0, this.width);
+        }
+    }
+
     void fillSquare(final int row, final int column, final Colors c) {
         if (row < 0 || row >= height || column < 0 || column >= width) {
             throw new IllegalArgumentException("Invalid row/column dimension!");
@@ -91,6 +100,6 @@ class PicrossCanvas {
             sb.append("\n");
         }
 
-        System.out.println(sb);
+        System.out.print(sb);
     }
 }
