@@ -11,10 +11,10 @@ Picross Detective is a tool to solve Picross (Nonograms, Griddlers, Hanjie, etc.
 
 ## To Build
 Picross Detective requires that Java 1.8 be installed on your Unix device.
-Picross Detective can be compiled by running the provided makefile.
+After cloning the repository, navigate to the src directory and type "make". This will compile the necessary files. To remove the compiled files, type "make clean".
 
 ## To Run
-The compiled .jar can be run from a Unix command line with "java -jar picrossDetective.jar".
+The compiled class can be run from a Unix command line with "java PicrossDetective".
 
 ## To Use
 Picross Detective is a command-line Java application that reads and writes to/from standard input/output. A user can opt to open a preexisting puzzle from a file, submit clues for a new puzzle, and then save either to a new file. The application will then attempt to solve the loaded puzzle. If solutions are found, they will be printed to standard out. The program will then exit.
