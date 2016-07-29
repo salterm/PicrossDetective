@@ -7,17 +7,22 @@ This file may not be copied, modified, or distributed except according to the te
 
 - - -
 
-A tool to create and solve Picross (Nonograms, Griddlers, Hanjie, etc.) puzzles.
+Picross Detective is a tool to solve Picross (Nonograms, Griddlers, Hanjie, etc.) puzzles.
+
+## To Build
+Picross Detective requires that Java 1.8 be installed on your Unix device.
+Picross Detective can be compiled by running the provided makefile.
+
+## To Run
+The compiled .jar can be run from a Unix command line with "java -jar picrossDetective.jar".
 
 ## To Use
-Picross Detective is a command-line application that reads and writes standard input/output. After submitting clues for a given Picross puzzle, the application will attempt to solve it. If a solution is found, it will be printed to standard out; otherwise, a blank puzzle will be displayed.
+Picross Detective is a command-line Java application that reads and writes to/from standard input/output. A user can opt to open a preexisting puzzle from a file, submit clues for a new puzzle, and then save either to a new file. The application will then attempt to solve the loaded puzzle. If solutions are found, they will be printed to standard out. The program will then exit.
 
 Currently it is not recommended to attempt solving complicated puzzles larger than 10 x 10. The process is very, painfully, slow.
 
-## To Build
-Picross Detective can be compiled into a .jar using javac.
-
 ## What are Picross puzzles?
+Picross (also known as Nonograms, Griddlers, Hanjie, and others) are a type of logic puzzle that, when solved, form a picture. They are composed of a grid with numerical clues for every row and column. Players use logical reasoning to determine what color goes in what square. More information can be found here: [Wikipedia: Nonogram](https://en.wikipedia.org/wiki/Nonogram)
 
 ## Current features
 * Command-line interface
