@@ -10,31 +10,82 @@ import java.io.*;
 
 public class PicrossDetective {
     public static void main(String[] args) {
-        //DEBUG
-        PicrossFileHandler fileHandler = new PicrossFileHandler("testPuzzle.pxd");
+        Scanner userInput = new Scanner(System.in);
 
-        boolean fileFound;
+        System.out.println("Welcome to Picross Detective!");
+        System.out.println("Type \"exit\" to exit the program.");
+
+        boolean readFromFile = false;
+
+        //Check if the user wants to load a puzzle from a file
+        userWantsRead:
+        while (true) {
+            System.out.println("Load puzzle from file? (y / n)");
+            String response = userInput.nextLine();
+            switch (response) {
+                case "exit":
+                    System.exit(0);
+                case "y":
+                    readFromFile = true;
+                    break userWantsRead;
+                case "n":
+                    readFromFile = false;
+                    break userWantsRead;
+                default:
+                    System.out.println("Please respond with \"y\" if you would like to load a puzzle from a file, or \"n\" if not.");
+                    break;
+            }
+        }
+
         PicrossCanvas canvas = null;
         PicrossPuzzle puzzle = null;
 
-        try {
-            puzzle = fileHandler.readCluesFromFile();
-            canvas = new PicrossCanvas(puzzle.height, puzzle.width);
-            fileFound = true;
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-            fileFound = false;
+        //Try to read a puzzle from a file
+        while (readFromFile) {
+            //Get the user to input a valid filename
+            System.out.println("Enter a valid filepath (PicrossDetective files have a \".pxd\" extension):");
+            String response = userInput.nextLine();
+            if (response.equals("exit")) {
+                System.exit(0);
+            } else {
+                PicrossFileHandler fileReader = new PicrossFileHandler(response);
+                try {
+                    puzzle = fileReader.readCluesFromFile();
+                    canvas = new PicrossCanvas(puzzle.height, puzzle.width);
+                    System.out.println("Puzzle successfully loaded from '" + response + "'.");
+                    break;
+                } catch (FileNotFoundException e) {
+                    System.out.println("Error reading file '" + response + "'.");
+                    readFromFile:
+                    while (true) {
+                        System.out.println("Try again? (y / n)");
+                        response = userInput.nextLine();
+                        switch (response) {
+                            case "exit":
+                                System.exit(0);
+                            case "y":
+                                readFromFile = true;
+                                break readFromFile;
+                            case "n":
+                                readFromFile = false;
+                                break readFromFile;
+                            default:
+                                System.out.println("Please respond with \"y\" if you would like to read the puzzle from a file, or \"n\" if not.");
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
-        if (!fileFound) {
-            Scanner in = new Scanner(System.in);
-
+        //Manually enter a puzzle
+        if (!readFromFile) {
             //Get height of puzzle
             int input = 0;
             while (input == 0) {
                 System.out.println("Enter height: ");
 
-                input = in.nextInt();
+                input = userInput.nextInt();
                 if (input < 1) {
                     System.out.println("Height must be a positive non-zero value.");
                     input = 0;
@@ -48,7 +99,7 @@ public class PicrossDetective {
             while (input == 0) {
                 System.out.println("Enter width: ");
 
-                input = in.nextInt();
+                input = userInput.nextInt();
                 if (input < 1) {
                     System.out.println("Width must be a positive non-zero value.");
                     input = 0;
@@ -126,6 +177,9 @@ public class PicrossDetective {
                     columnClues.add(clue);
                 }
 
+                //Clear the input buffer
+                userInput.nextLine();
+
                 //Check that total puzzle and minimum spaces between does not exceed puzzle dimensions
                 int impliedColumnHeight = 0;
                 for (Integer c : columnClues) {
@@ -142,31 +196,83 @@ public class PicrossDetective {
             }
         }
 
-        //DEBUG
-        //Write to file
-        try {
-            fileHandler.writeCluesToFile(puzzle);
-        } catch (IOException e) {
-            System.out.println(e);
+        //Check if the user wants to save the puzzle to a file
+        boolean writeToFile = false;
+        userWriteFile:
+        while (true) {
+            System.out.println("Save puzzle to file? (y / n)");
+            String response = userInput.nextLine();
+            switch (response) {
+                case "exit":
+                    System.exit(0);
+                case "y":
+                    writeToFile = true;
+                    break userWriteFile;
+                case "n":
+                    writeToFile = false;
+                    break userWriteFile;
+                default:
+                    System.out.println("Please respond with \"y\" if you would like to save the puzzle to a file, or \"n\" if not.");
+                    break;
+            }
+        }
+
+        //Get the user to input a valid filename
+        while (writeToFile) {
+            System.out.println("Enter a valid filepath (PicrossDetective files have a \".pxd\" extension):");
+            String response = userInput.nextLine();
+            if (response.equals("exit")) {
+                System.exit(0);
+            } else {
+                PicrossFileHandler fileWriter = new PicrossFileHandler(response);
+                try {
+                    fileWriter.writeCluesToFile(puzzle);
+                    System.out.println("Puzzle successfully saved to '" + response + "'.");
+                    break;
+                } catch (IOException e) {
+                    System.out.println("Error writing file '" + response + "'.");
+                    writeToFile:
+                    while (true) {
+                        System.out.println("Try again? (y / n)");
+                        response = userInput.nextLine();
+                        switch (response) {
+                            case "exit":
+                                System.exit(0);
+                            case "y":
+                                writeToFile = true;
+                                break writeToFile;
+                            case "n":
+                                writeToFile = false;
+                                break writeToFile;
+                            default:
+                                System.out.println("Please respond with \"y\" if you would like to save the puzzle to a file, or \"n\" if not.");
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         //Begin solving
+        System.out.println("Beginning solving.");
 
         //Find all possible rows for every row
+        System.out.println("Creating list of all possible rows.");
         ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow = new ArrayList<>(puzzle.height);
         for (int row = 0; row < puzzle.height; row++) {
             allPossibleRowsEveryRow.add(findAllPossibleRows(puzzle, row));
         }
 
         //Iterate through all possible solutions
+        System.out.println("Searching all combinations of all possible rows.");
         boolean isPuzzleSatisfiable = solve(canvas, puzzle, allPossibleRowsEveryRow, 0);
 
         //Display canvas; either a solution, or blank if no solution found
         if (isPuzzleSatisfiable) {
+            System.out.println("Solution found!");
             canvas.print();
         } else {
-            canvas.clearCanvas();
-            canvas.print();
+            System.out.println("No solution found.");
         }
     }
 
@@ -199,6 +305,7 @@ public class PicrossDetective {
         }
     }
 
+    //Naive depth-first search-based solving algorithm, which iterates over all possible combinations of possible rows and returns the first solution, or exhausts all possibilities fruitlessly.
     private static boolean solve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, final int row) {
         if (row >= puzzle.height) {
             //No solution possible if we're outside the bounds of the puzzle
