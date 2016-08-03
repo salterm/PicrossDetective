@@ -260,7 +260,7 @@ public class PicrossDetective {
         //Iterate through all possible solutions
         System.out.println("Searching all combinations of all possible rows.");
         Vector<PicrossCanvas> solutions = new Vector<>();
-        solve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle, allPossibleRowsEveryRow, solutions, 0);
+        randomGenerationSolve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle, allPossibleRowsEveryRow, solutions, 0);
 
         //Report any solutions found
         String solutionReport;
@@ -310,7 +310,7 @@ public class PicrossDetective {
     }
 
     //Naive depth-first search-based solving algorithm, which iterates over all possible combinations of possible rows and returns the first solution, or exhausts all possibilities fruitlessly.
-    private static void solve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, Vector<PicrossCanvas> solutions, final int row) {
+    private static void randomGenerationSolve(PicrossCanvas canvas, final PicrossPuzzle puzzle, final ArrayList<Vector<ArrayList<PicrossCanvas.Colors>>> allPossibleRowsEveryRow, Vector<PicrossCanvas> solutions, final int row) {
         //Try all possible rows
         for (ArrayList<PicrossCanvas.Colors> r : allPossibleRowsEveryRow.get(row)) {
             //Try this possible row
@@ -318,7 +318,7 @@ public class PicrossDetective {
 
             //If this isn't the last row
             if (row < puzzle.height - 1) {
-                solve(canvas, puzzle, allPossibleRowsEveryRow, solutions, row + 1);
+                randomGenerationSolve(canvas, puzzle, allPossibleRowsEveryRow, solutions, row + 1);
             } else {
                 //Check if a solution is present
                 if (puzzle.isPuzzleSatisfied(canvas)) {
@@ -326,5 +326,48 @@ public class PicrossDetective {
                 }
             }
         }
+    }
+
+    private static void simpleBoxesSolve(PicrossCanvas canvas, final PicrossPuzzle puzzle) {
+        //Rows
+        for (int row = 0; row < puzzle.width; row++) {
+            for (int clue = 0; clue < puzzle.rows.get(row).size(); clue++) {
+                //Determine available size
+
+                int startPosition = findStartPosition(clue, puzzle.rows.get(row)); //A_0 = previous clue lengths + 1 * # of previous clues
+                int endPosition = puzzle.width - findEndPositionOffset(clue, puzzle.rows.get(row)); //A_m = n - (following clue lengths + 1 * # of following clues)
+                int availableSize = endPosition - startPosition + 1; //A.length
+                int clueLength = puzzle.rows.get(row).get(clue); //L
+                if (availableSize < 2 * clueLength) {
+                    //Fill L - (A - L) starting at (A_0 + A - L)
+                    for (int column = startPosition + (availableSize - clueLength); column <= endPosition - (availableSize - clueLength); column++) {
+                        canvas.fillSquare(row, column, PicrossCanvas.Colors.BLACK);
+                    }
+                }
+            }
+        }
+        //Columns
+        for (Vector<Integer> clues : puzzle.columns) {
+            for (int clue : clues) {
+
+            }
+        }
+
+        canvas.print();
+    }
+    private static int findStartPosition(int cluePosition, Vector<Integer> clues) {
+        int sumOfPreviousClues = 0;
+        for (int clue = 0; clue < cluePosition; clue++) {
+            sumOfPreviousClues += clues.get(clue);
+        }
+        return sumOfPreviousClues + cluePosition;
+    }
+
+    private static int findEndPositionOffset(int cluePosition, Vector<Integer> clues) {
+        int sumOfFollowingClues = 0;
+        for (int clue = clues.size() - 1; clue > cluePosition; clue--) {
+            sumOfFollowingClues += clues.get(clue);
+        }
+        return sumOfFollowingClues + (clues.size() - cluePosition);
     }
 }
