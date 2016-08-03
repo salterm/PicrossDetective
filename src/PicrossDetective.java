@@ -121,14 +121,13 @@ public class PicrossDetective {
                     return;
                 }
                 if (!(userRowClues.length == 1 && userRowClues[0].equals(""))) {
-
                     for (String s : userRowClues) {
                         int clue = Integer.parseInt(s);
                         if (clue <= 0) {
-                            throw new IllegalArgumentException("PicrossPuzzle must be positive non-zero values.");
+                            throw new IllegalArgumentException("Clues must be positive non-zero values.");
                         }
                         if (clue > puzzle.width) {
-                            throw new IllegalArgumentException("PicrossPuzzle cannot exceed puzzle dimensions.");
+                            throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
                         }
                         rowClues.add(clue);
                     }
@@ -160,15 +159,17 @@ public class PicrossDetective {
                 } catch (Exception e) {
                     return;
                 }
-                for (String s : userColumnClues) {
-                    int clue = Integer.parseInt(s);
-                    if (clue <= 0) {
-                        throw new IllegalArgumentException("PicrossPuzzle must be positive non-zero values.");
+                if (!(userColumnClues.length == 1 && userColumnClues[0].equals(""))) {
+                    for (String s : userColumnClues) {
+                        int clue = Integer.parseInt(s);
+                        if (clue <= 0) {
+                            throw new IllegalArgumentException("Clues must be positive non-zero values.");
+                        }
+                        if (clue > puzzle.height) {
+                            throw new IllegalArgumentException("Clues cannot exceed puzzle dimensions.");
+                        }
+                        columnClues.add(clue);
                     }
-                    if (clue > puzzle.height) {
-                        throw new IllegalArgumentException("PicrossPuzzle cannot exceed puzzle dimensions.");
-                    }
-                    columnClues.add(clue);
                 }
 
                 //Check that total puzzle and minimum spaces between does not exceed puzzle dimensions
@@ -260,6 +261,10 @@ public class PicrossDetective {
         //Iterate through all possible solutions
         System.out.println("Searching all combinations of all possible rows.");
         Vector<PicrossCanvas> solutions = new Vector<>();
+
+        //DEBUG
+        simpleBoxesSolve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle);
+
         randomGenerationSolve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle, allPossibleRowsEveryRow, solutions, 0);
 
         //Report any solutions found
@@ -269,8 +274,7 @@ public class PicrossDetective {
 
         } else if (solutions.size() > 1) {
             solutionReport = "Solutions found!";
-        }
-        else {
+        } else {
             solutionReport = "No solution found.";
         }
         System.out.println(solutionReport);
@@ -322,7 +326,7 @@ public class PicrossDetective {
             } else {
                 //Check if a solution is present
                 if (puzzle.isPuzzleSatisfied(canvas)) {
-                   solutions.add(new PicrossCanvas(canvas));
+                    solutions.add(new PicrossCanvas(canvas));
                 }
             }
         }
@@ -330,7 +334,7 @@ public class PicrossDetective {
 
     private static void simpleBoxesSolve(PicrossCanvas canvas, final PicrossPuzzle puzzle) {
         //Rows
-        for (int row = 0; row < puzzle.width; row++) {
+        for (int row = 0; row < puzzle.height; row++) {
             for (int clue = 0; clue < puzzle.rows.get(row).size(); clue++) {
                 //Determine available size
 
@@ -347,14 +351,25 @@ public class PicrossDetective {
             }
         }
         //Columns
-        for (Vector<Integer> clues : puzzle.columns) {
-            for (int clue : clues) {
+        for (int column = 0; column < puzzle.width; column++) {
+            for (int clue = 0; clue < puzzle.columns.get(column).size(); clue++) {
+                //Determine available size
 
+                int startPosition = findStartPosition(clue, puzzle.columns.get(column)); //A_0 = previous clue lengths + 1 * # of previous clues
+                int endPosition = puzzle.height - findEndPositionOffset(clue, puzzle.columns.get(column)); //A_m = n - (following clue lengths + 1 * # of following clues)
+                int availableSize = endPosition - startPosition + 1; //A.length
+                int clueLength = puzzle.columns.get(column).get(clue); //L
+                if (availableSize < 2 * clueLength) {
+                    //Fill L - (A - L) starting at (A_0 + A - L)
+                    for (int row = startPosition + (availableSize - clueLength); row <= endPosition - (availableSize - clueLength); row++) {
+                        canvas.fillSquare(row, column, PicrossCanvas.Colors.BLACK);
+                    }
+                }
             }
         }
-
         canvas.print();
     }
+
     private static int findStartPosition(int cluePosition, Vector<Integer> clues) {
         int sumOfPreviousClues = 0;
         for (int clue = 0; clue < cluePosition; clue++) {
