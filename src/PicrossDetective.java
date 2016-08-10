@@ -262,9 +262,6 @@ public class PicrossDetective {
         System.out.println("Searching all combinations of all possible rows.");
         Vector<PicrossCanvas> solutions = new Vector<>();
 
-        //DEBUG
-        simpleBoxesSolve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle);
-
         randomGenerationSolve(new PicrossCanvas(puzzle.height, puzzle.width), puzzle, allPossibleRowsEveryRow, solutions, 0);
 
         //Report any solutions found

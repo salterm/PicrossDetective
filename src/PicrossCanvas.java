@@ -90,10 +90,10 @@ class PicrossCanvas {
                         sb.append("?");
                         break;
                     case WHITE:
-                        sb.append("0");
+                        sb.append("░");
                         break;
                     case BLACK:
-                        sb.append("#");
+                        sb.append("▓");
                         break;
                 }
             }
