@@ -9,6 +9,9 @@ This file may not be copied, modified, or distributed except according to the te
 
 Picross Detective is a tool to solve Picross (Nonograms, Griddlers, Hanjie, etc.) puzzles. Given the puzzle's dimensions and the clues for each row and column, Picross Detective will try to find solutions to the puzzle. Currently, Picross Detective accepts input through a console, and can read/write puzzles to disk.
 
+## What are Picross puzzles?
+Picross (also known as Nonograms, Griddlers, Hanjie, and others) are a type of logic puzzle that, when solved, form a picture. They are composed of a grid with numerical clues for every row and column. Players use logical reasoning to determine what color goes in what square. More information can be found here: [Wikipedia: Nonogram](https://en.wikipedia.org/wiki/Nonogram)
+
 ## To Build
 Picross Detective requires that Java 1.8 be installed on your Unix device.
 After cloning the repository, navigate to the src directory and type "make". This will compile the necessary files. To remove the compiled files, type "make clean".
@@ -21,8 +24,24 @@ Picross Detective is a command-line Java application that reads and writes to/fr
 
 Currently it is not recommended to attempt solving complicated puzzles larger than 10 x 10. The process is very, painfully, slow.
 
-## What are Picross puzzles?
-Picross (also known as Nonograms, Griddlers, Hanjie, and others) are a type of logic puzzle that, when solved, form a picture. They are composed of a grid with numerical clues for every row and column. Players use logical reasoning to determine what color goes in what square. More information can be found here: [Wikipedia: Nonogram](https://en.wikipedia.org/wiki/Nonogram)
+## File format (.pxd)
+Files are formatted with ASCII digits and spaces. Files must begin with the puzzle's dimensions (height by width) separated by a space. Following should be a list of row clues, with clues for each row entered left-to-right, separated by spaces, and ended with a newline. Immediately following should be a list of column clues in the same manner.
+
+### Example file
+```
+3 2
+1
+2
+1
+2
+2
+```
+...should be a puzzle with solutions:
+```
+▓░   ░▓
+▓▓ & ▓▓
+░▓   ▓░
+```
 
 ## Current features
 * Command-line interface
@@ -41,3 +60,8 @@ Picross (also known as Nonograms, Griddlers, Hanjie, and others) are a type of l
 * Option to create puzzle from an existing image
 * Human-like logical solving
 * Hybrid human-like solving combined with random solution generator (should be faster for some puzzles?)
+* SMT solving (Z3?)
+* Option to choose solving method before solving begins
+* Command line arguments for file loading / saving / solving method
+* MAN page / --help argument documentation
+* Option to output solutions to a file
